@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bookworm
 
 COPY .env /var/www/html/wordpress/.env
 COPY script ./script

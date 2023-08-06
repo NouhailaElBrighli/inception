@@ -1,0 +1,21 @@
+# Create a bash script to automate the secure installation process
+RUN echo -e "#!/usr/bin/expect\n\
+spawn sudo mariadb-secure-installation\n\
+expect \"Enter current password for root (enter for none):\"\n\
+send \"\\r\"\n\
+expect \"Set root password? [Y/n]\"\n\
+send \"Y\\r\"\n\
+expect \"New password:\" \n\
+send \"your_root_password\\r\"\n\
+expect \"Re-enter new password:\" \n\
+send \"your_root_password\\r\"\n\
+expect \"Remove anonymous users? [Y/n]\"\n\
+send \"Y\\r\"\n\
+expect \"Disallow root login remotely? [Y/n]\"\n\
+send \"Y\\r\"\n\
+expect \"Remove test database and access to it? [Y/n]\"\n\
+send \"Y\\r\"\n\
+expect \"Reload privilege tables now? [Y/n]\"\n\
+send \"Y\\r\"\n\
+expect eof\n\
+" > /tmp/secure_install.sh

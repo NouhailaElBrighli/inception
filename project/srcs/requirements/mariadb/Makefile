@@ -2,10 +2,8 @@ all : build run
 
 build :
 	docker build . -t mariadb
-
 run    :
 	docker run --name mariadb -dp 3306:3306 mariadb
-
 show :
 	docker image ls
 	docker ps -a

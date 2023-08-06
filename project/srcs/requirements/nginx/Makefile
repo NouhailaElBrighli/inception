@@ -4,7 +4,7 @@ build :
 	docker build . -t nginx
 
 run    :
-	docker run --name nginx -dp 443:443 nginx
+	docker run --name nginx --network=host -d nginx
 
 show :
 	docker image ls
