@@ -4,7 +4,7 @@ build :
 	docker build . -t wordpress
 
 run :
-	docker run --env-file /workspaces/inception/project/srcs/.env --name wordpress --link mariadb:mariadb -d -p 9000:9000 wordpress
+	docker run --env-file /workspaces/inception/project/srcs/.env --name wordpress  -d -p 9000:9000 wordpress
 
 show :
 	docker image ls

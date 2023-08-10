@@ -4,7 +4,59 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
+    networks:
+      - wordpress
     ports:
-      -3306:3306
+      - 3306:3306
+    env_file:
+      - .env
     environment:
-      - name=value
+      - BDD_USER=${BDD_USER}
+      - BDD_USER_PASSWORD=${BDD_USER_PASSWORD}
+      - BDD_NAME=${BDD_NAME}
+    volumes:
+      - mariadb:/var/lib/mysql/
+    restart: always
+    init: true
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress
+    networks:
+      - wordpress
+    depends_on:
+      - mariadb
+    ports:
+      - 9000:9000
+    env_file:
+      - .env
+    environment:
+      - BDD_USER=${BDD_USER}
+      - BDD_USER_PASSWORD=${BDD_USER_PASSWORD}
+      - BDD_NAME=${BDD_NAME}
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    restart: always
+    init: true
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    networks:
+      - wordpress
+    depends_on:
+      - wordpress
+    ports:
+      - 443:443
+    env_file:
+      - .env
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    restart: always
+    init: true
+      
+networks:
+  wordpress:
+    driver: bridge
+
+volumes :
+  mariadb:
+  wordpress:
