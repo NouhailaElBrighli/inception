@@ -14,7 +14,7 @@ RUN chmod +x wp-cli.phar
 RUN mv wp-cli.phar /usr/local/bin/wp
 
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/
-COPY ./tools/index.php    /var/www/html/wordpress/index.php
+# COPY ./tools/index.php    /var/www/html/wordpress/index.php
 EXPOSE 9000
 
 ENTRYPOINT [ "sh", "wp-script.sh"]

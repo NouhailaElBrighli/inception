@@ -16,8 +16,8 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
     volumes:
       - mariadb:/var/lib/mysql/
-    # restart: always
-    # init: true
+    restart: always
+    init: true
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
@@ -30,14 +30,17 @@ services:
     env_file:
       - .env
     environment:
-    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    - MYSQL_DATABASE=${MYSQL_DATABASE}
-    - MYSQL_USER=${MYSQL_USER}
-    - MYSQL_USER_PASSWORD=${MYSQL_USER_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_USER_PASSWORD=${MYSQL_USER_PASSWORD}
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - WP_USER=${WP_USER}
+      - WP_PW={WP_PW}
+      - WP_EMAIL=${WP_EMAIL}
     volumes:
       - wordpress:/var/www/html/wordpress
-    # restart: always
-    # init: true
+    restart: always
+    init: true
   nginx:
     container_name: nginx
     build: ./requirements/nginx
@@ -49,19 +52,10 @@ services:
       - 443:443
     env_file:
       - .env
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_USER_PASSWOR=${MYSQL_USER_PASSWORD}
-      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
-      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
-      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
-      - WORDPRESS_TABLE_PREFIX=${WORDPRESS_TABLE_PREFIX}
     volumes:
       - wordpress:/var/www/html/wordpress
-    # restart: always
-    # init: true
+    restart: always
+    init: true
       
 networks:
   wordpress:
