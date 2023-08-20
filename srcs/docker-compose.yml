@@ -6,18 +6,19 @@ services:
     build: ./requirements/mariadb
     networks:
       - wordpress
-    ports:
-      - 3306:3306
+    expose:
+      - 3306
     env_file:
       - .env
     environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_USER_PASSWORD=${MYSQL_USER_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - ROOT_PASSWORD=${ROOT_PASSWORD}
     volumes:
-      - mariadb:/var/lib/mysql/
+      - mariadb_data:/var/lib/mysql
     restart: always
-    init: true
+
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
@@ -25,8 +26,8 @@ services:
       - wordpress
     depends_on:
       - mariadb
-    ports:
-      - 9000:9000
+    expose:
+      - 9000
     env_file:
       - .env
     environment:
@@ -34,13 +35,17 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_USER_PASSWORD=${MYSQL_USER_PASSWORD}
       - DOMAIN_NAME=${DOMAIN_NAME}
+      - ROOT_PASSWORD=${ROOT_PASSWORD}
       - WP_USER=${WP_USER}
-      - WP_PW={WP_PW}
+      - WP_PW=${WP_PW}
       - WP_EMAIL=${WP_EMAIL}
+      - WP_USER_2=${WP_USER_2}
+      - WP_EMAIL_2=${WP_EMAIL_2}
+      - WP_PASSWORD_2=${WP_PASSWORD_2}
     volumes:
-      - wordpress:/var/www/html/wordpress
+      - wordpress_data:/var/www/html/wordpress
     restart: always
-    init: true
+
   nginx:
     container_name: nginx
     build: ./requirements/nginx
@@ -53,14 +58,25 @@ services:
     env_file:
       - .env
     volumes:
-      - wordpress:/var/www/html/wordpress
+      - wordpress_data:/var/www/html/wordpress
     restart: always
-    init: true
-      
+
 networks:
   wordpress:
     driver: bridge
 
 volumes :
-  mariadb:
-  wordpress:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/nel-brig/data/mariadb
+
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/nel-brig/data/wordpress
+    

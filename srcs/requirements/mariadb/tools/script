@@ -1,9 +1,19 @@
+#!/bin/bash
+
 service mariadb start 
+sleep 2
+mkdir -p /run/mysqld/
 
 echo "CREATE DATABASE $MYSQL_DATABASE;" | mysql
 
 echo "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD';" | mysql
+
 echo "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWORD';" | mysql
+
+echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$ROOT_PASSWORD';" | mysql
+
 echo "FLUSH PRIVILEGES;" | mysql
-kill $(cat /var/run/mysqld/mysqld.pid)
-mysqld
+
+mysqladmin -u root password $ROOT_PASSWORD shutdown
+
+mysqld_safe --bind-address=0.0.0.0
